@@ -4,7 +4,7 @@ public class NPIRegistryLookup {
 HttpResponse testResponse = NPIRegistryLookup.NPIRegistryLookupGet(); */
     @InvocableMethod(callout=true label='NPI Registry Info Get')
     public static List<Providers> NPIRegistryLookupGet(List<String> ids) {
-        
+
         List<Object> results;
         Map<String, Object> jsonMap;
         Map<String, Object> result;
@@ -15,8 +15,11 @@ HttpResponse testResponse = NPIRegistryLookup.NPIRegistryLookupGet(); */
 
         String firstName, lastName, credential, lastUpdateEpoch;
 
+        try { 
+
         String lookupid = ids.get(0);
         // get NPI from Healthcare Provider record
+
         list <HealthcareProvider> NPI_list = [SELECT AccountId, NPI__c FROM HealthcareProvider WHERE Id = :lookupid LIMIT 1];
         String AccountId = NPI_list[0].AccountId;
         String NPI = NPI_list[0].NPI__c;
@@ -72,6 +75,12 @@ HttpResponse testResponse = NPIRegistryLookup.NPIRegistryLookupGet(); */
             providerList.add(provider);
         }
         return providerList;
+      }
+      catch(Exception e) {
+        System.debug('Error--'+e.getMessage());
+        return null;
+      }
+
     }
 
     private static List<Addresses> getAddresses( List<Object> data) {
